@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultados del Grupo - SaberPro</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f5f7fa;
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: linear-gradient(90deg, #1a3a52 0%, #2c5aa0 100%);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            padding: 1rem 0;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            color: #ffffff !important;
+            font-size: 1.4rem;
+            letter-spacing: 0.5px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+        
+        .navbar-brand i {
+            color: #ffffff !important;
+        }
+
+        .nav-link {
+            color: #ffffff !important;
+            transition: all 0.3s ease;
+            margin: 0 0.5rem;
+            font-weight: 500;
+            opacity: 0.9;
+        }
+
+        .nav-link:hover {
+            color: #ffffff !important;
+            opacity: 1;
+            transform: translateY(-2px);
+        }
+
+        .nav-link.active {
+            color: #ffffff !important;
+            opacity: 1;
+        }
+        
+        .nav-link i {
+            color: #ffffff !important;
+        }
+
+        /* Card */
+        .card {
+            border: none;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 10px 35px rgba(0,0,0,0.15);
+            transition: all 0.35s ease;
+            background: white;
+            margin-bottom: 2rem;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+        }
+
+        .card-header {
+            background: linear-gradient(90deg, #1a3a52 0%, #2c5aa0 100%);
+            color: white;
+            border: none;
+            padding: 1.5rem;
+            font-weight: 600;
+        }
+
+        .card-header h5 {
+            margin: 0;
+            font-size: 1.3rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .stat-card {
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        }
+
+        /* Buttons */
+        .btn {
+            border-radius: 50px;
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #1a3a52 0%, #2c5aa0 100%);
+        }
+
+        .btn-info {
+            background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+        }
+
+        h2 {
+            color: #1a3a52;
+            font-weight: 700;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+        <a class="navbar-brand" th:href="@{/estudiante/dashboard}">
+            <i class="fas fa-graduation-cap"></i> Sistema SaberPro
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/estudiante/dashboard}">
+                        <i class="fas fa-home"></i> Inicio
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/estudiante/identificacion}">
+                        <i class="fas fa-id-card"></i> Identificación
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/estudiante/mi-resultado}">
+                        <i class="fas fa-chart-line"></i> Mi Resultado
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" th:href="@{/estudiante/resultados-totales}">
+                        <i class="fas fa-users"></i> Resultados del Grupo
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/estudiante/mis-beneficios}">
+                        <i class="fas fa-star"></i> Mis Beneficios
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/logout}">
+                        <i class="fas fa-sign-out-alt"></i> Salir
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<main class="container py-5">
+    <h2><i class="fas fa-chart-bar"></i> Estadísticas Globales del Grupo</h2>
+
+    <!-- Tu Posición Relativa Anónima -->
+    <div class="card mb-4 border-primary" th:if="${miPosicion != null}">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0"><i class="fas fa-medal"></i> Tu Posición Relativa (Anónima)</h5>
+        </div>
+        <div class="card-body">
+            <div class="row text-center">
+                <div class="col-md-6">
+                    <h3 class="text-primary" th:text="${miPosicion}"></h3>
+                    <p class="text-muted mb-0">Tu Posición</p>
+                    <small>de <span th:text="${totalConPuntaje}"></span> estudiantes</small>
+                </div>
+                <div class="col-md-6">
+                    <h3 class="text-success" th:text="${#numbers.formatDecimal((totalConPuntaje - miPosicion) * 100.0 / totalConPuntaje, 1, 1)} + '%'"></h3>
+                    <p class="text-muted mb-0">Percentil</p>
+                    <small>Porcentaje que superas</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Estadísticas Generales del Grupo -->
+    <div class="row g-4 mb-4" th:if="${totalEstudiantes != null}">
+        <div class="col-md-3">
+            <div class="card stat-card bg-primary text-white">
+                <div class="card-body text-center">
+                    <h6><i class="fas fa-users"></i> Total Estudiantes</h6>
+                    <h2 th:text="${totalEstudiantes}"></h2>
+                    <small th:text="${totalConPuntaje} + ' con puntaje'"></small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card bg-success text-white">
+                <div class="card-body text-center">
+                    <h6><i class="fas fa-chart-line"></i> Promedio General</h6>
+                    <h2 th:text="${#numbers.formatDecimal(promedioGeneral, 1, 1)}"></h2>
+                    <small>Puntaje promedio</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card bg-info text-white">
+                <div class="card-body text-center">
+                    <h6><i class="fas fa-arrow-up"></i> Nota Máxima</h6>
+                    <h2 th:text="${notaMaxima}"></h2>
+                    <small>Mejor puntaje</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card bg-warning text-dark">
+                <div class="card-body text-center">
+                    <h6><i class="fas fa-arrow-down"></i> Nota Mínima</h6>
+                    <h2 th:text="${notaMinima}"></h2>
+                    <small>Menor puntaje</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tu Información Personal -->
+    <div class="card mb-4" th:if="${estudiante != null}">
+        <div class="card-header bg-info text-white">
+            <h5 class="mb-0"><i class="fas fa-user"></i> Tu Información</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Nombre:</strong> <span th:text="${estudiante.primerNombre} + ' ' + ${estudiante.primerApellido}"></span></p>
+                    <p><strong>Tu Puntaje:</strong> <span class="badge bg-primary fs-5" th:text="${estudiante.puntaje}"></span></p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Documento:</strong> <span th:text="${estudiante.tipoDocumento} + ' ' + ${estudiante.numeroDocumento}"></span></p>
+                    <p><strong>Fecha Examen:</strong> <span th:text="${#temporals.format(estudiante.fechaExamen, 'dd/MM/yyyy')}"></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="alert alert-warning" role="alert" th:if="${estudiante == null}">
+        <span th:if="${error != null}" th:text="${error}"></span>
+        <span th:if="${error == null}">No se encontró información del estudiante.</span>
+    </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+
