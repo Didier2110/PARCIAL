@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${pageTitle}">Estadísticas del Sistema</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <style>
+        body {
+            background: #f5f7fa;
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .navbar {
+            background: linear-gradient(90deg, #1a3a52 0%, #2c5aa0 100%);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            padding: 1rem 0;
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            color: #ffffff !important;
+            font-size: 1.4rem;
+            letter-spacing: 0.5px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+        
+        .navbar-brand i {
+            color: #ffffff !important;
+        }
+        
+        .nav-link {
+            color: #ffffff !important;
+            transition: all 0.3s ease;
+            margin: 0 0.5rem;
+            font-weight: 500;
+            opacity: 0.9;
+        }
+        
+        .nav-link:hover {
+            color: #ffffff !important;
+            opacity: 1;
+            transform: translateY(-2px);
+        }
+        
+        .nav-link i {
+            color: #ffffff !important;
+        }
+        
+        .page-header {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .page-header h2 {
+            color: #1a3a52;
+            font-weight: 700;
+            margin-bottom: 0;
+        }
+        
+        .stats-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+        
+        .stats-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        
+        .stats-card.primary {
+            background: linear-gradient(135deg, #1a3a52 0%, #2c5aa0 100%);
+            color: white;
+        }
+        
+        .stats-card.success {
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+            color: white;
+        }
+        
+        .stats-card.warning {
+            background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+            color: white;
+        }
+        
+        .stats-card.danger {
+            background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
+            color: white;
+        }
+        
+        .stats-card h3 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 0.5rem 0;
+        }
+        
+        .stats-card p {
+            margin: 0;
+            opacity: 0.9;
+            font-weight: 500;
+        }
+        
+        .stats-card i {
+            font-size: 2.5rem;
+            opacity: 0.3;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .card-header {
+            background: linear-gradient(90deg, #1a3a52 0%, #2c5aa0 100%);
+            color: white;
+            padding: 1.5rem;
+            border: none;
+        }
+        
+        .card-header h5 {
+            margin: 0;
+            font-weight: 700;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 300px;
+            padding: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container" style="max-width: 1200px;">
+            <a class="navbar-brand" th:href="@{/dashboard}">
+                <i class="fas fa-graduation-cap"></i> Sistema SaberPro
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/dashboard}">
+                            <i class="fas fa-home"></i> Inicio
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/admin/usuarios}">
+                            <i class="fas fa-users"></i> Gestión Usuarios
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/admin/usuarios/nuevo}">
+                            <i class="fas fa-user-plus"></i> Crear Usuario
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/admin/estadisticas}">
+                            <i class="fas fa-chart-line"></i> Estadísticas
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/logout}">
+                            <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid mt-4 mb-5">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h2><i class="fas fa-chart-bar"></i> <span th:text="${pageTitle}">Estadísticas del Sistema</span></h2>
+            <p class="text-muted mb-0">Vista general de usuarios y estudiantes del sistema</p>
+        </div>
+
+        <!-- Estadísticas de Usuarios -->
+        <h4 class="mb-3 text-dark"><i class="fas fa-users"></i> Usuarios del Sistema</h4>
+        <div class="row mb-4">
+            <div class="col-md-3 mb-3">
+                <div class="stats-card primary">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="mb-2">Total Usuarios</p>
+                            <h3 th:text="${totalUsuarios ?: 0}">0</h3>
+                        </div>
+                        <i class="fas fa-users"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="stats-card danger">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="mb-2">Administradores</p>
+                            <h3 th:text="${countAdministradores ?: 0}">0</h3>
+                        </div>
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="stats-card warning">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="mb-2">Coordinadores</p>
+                            <h3 th:text="${countCoordinadores ?: 0}">0</h3>
+                        </div>
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="stats-card success">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="mb-2">Estudiantes</p>
+                            <h3 th:text="${countEstudiantes ?: 0}">0</h3>
+                        </div>
+                        <i class="fas fa-user-graduate"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Estadísticas de Estudiantes -->
+        <h4 class="mb-3 text-dark"><i class="fas fa-graduation-cap"></i> Datos Académicos</h4>
+        <div class="row mb-4">
+            <div class="col-md-3 mb-3">
+                <div class="stats-card primary">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="mb-2">Total Estudiantes</p>
+                            <h3 th:text="${totalEstudiantes ?: 0}">0</h3>
+                        </div>
+                        <i class="fas fa-database"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="stats-card success">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="mb-2">Con Puntaje</p>
+                            <h3 th:text="${estudiantesConPuntaje ?: 0}">0</h3>
+                        </div>
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="stats-card warning">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="mb-2">Con Beneficios</p>
+                            <h3 th:text="${estudiantesConBeneficios ?: 0}">0</h3>
+                        </div>
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="stats-card danger">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="mb-2">No Graduables</p>
+                            <h3 th:text="${estudiantesNoGraduables ?: 0}">0</h3>
+                            <small style="font-size: 0.75rem; opacity: 0.8;">&lt;80 o sin puntaje</small>
+                        </div>
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gráficos -->
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-chart-pie"></i> Distribución de Usuarios por Rol</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="rolesChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-chart-bar"></i> Estado de Estudiantes</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="estudiantesChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-chart-line"></i> Distribución de Puntajes Saber Pro</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container" style="height: 350px;">
+                            <canvas id="puntajesChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Indicadores Clave -->
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-chart-line fa-3x text-primary mb-3"></i>
+                        <h4 th:text="${#numbers.formatDecimal(promedioPuntaje ?: 0, 1, 2)}">0.00</h4>
+                        <p class="text-muted mb-0">Promedio Puntaje Saber Pro</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-percentage fa-3x text-warning mb-3"></i>
+                        <h4 th:text="${#numbers.formatDecimal(porcentajeBeneficios ?: 0, 1, 2)} + '%'">0.00%</h4>
+                        <p class="text-muted mb-0">Estudiantes con Beneficios</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-exclamation-circle fa-3x text-danger mb-3"></i>
+                        <h4 th:text="${#numbers.formatDecimal(porcentajeNoGraduables ?: 0, 1, 2)} + '%'">0.00%</h4>
+                        <p class="text-muted mb-0">No Graduables</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script th:inline="javascript">
+        // Gráfico de Roles
+        const rolesCtx = document.getElementById('rolesChart').getContext('2d');
+        new Chart(rolesCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Administradores', 'Coordinadores', 'Estudiantes'],
+                datasets: [{
+                    data: [
+                        [[${countAdministradores ?: 0}]],
+                        [[${countCoordinadores ?: 0}]],
+                        [[${countEstudiantes ?: 0}]]
+                    ],
+                    backgroundColor: ['#d32f2f', '#ff9800', '#2ecc71'],
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+
+        // Gráfico de Estudiantes
+        const estudiantesCtx = document.getElementById('estudiantesChart').getContext('2d');
+        new Chart(estudiantesCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Con Puntaje', 'Sin Puntaje', 'Con Beneficios', 'No Graduables'],
+                datasets: [{
+                    label: 'Cantidad',
+                    data: [
+                        [[${estudiantesConPuntaje ?: 0}]],
+                        [[${estudiantesSinPuntaje ?: 0}]],
+                        [[${estudiantesConBeneficios ?: 0}]],
+                        [[${estudiantesNoGraduables ?: 0}]]
+                    ],
+                    backgroundColor: ['#2ecc71', '#6c757d', '#ff9800', '#d32f2f'],
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        }
+                    }
+                }
+            }
+        });
+
+        // Gráfico de Distribución de Puntajes
+        const distribucion = [[${distribucionPuntajes}]];
+        const puntajesCtx = document.getElementById('puntajesChart').getContext('2d');
+        new Chart(puntajesCtx, {
+            type: 'line',
+            data: {
+                labels: distribucion.map(d => d[0] + '-' + (d[0] + 9)),
+                datasets: [{
+                    label: 'Estudiantes',
+                    data: distribucion.map(d => d[1]),
+                    backgroundColor: 'rgba(46, 204, 113, 0.2)',
+                    borderColor: '#2ecc71',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
